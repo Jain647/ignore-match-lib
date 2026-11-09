@@ -34,3 +34,10 @@ Directory-only patterns need to know whether the path is a directory. `matchPath
 - `matchPath(path, patterns, options)` — applies a precompiled pattern list to a path. `patterns` is the array returned by mapping `compilePattern` and filtering out `null`.
 
 Paths are normalized before matching: backslashes become forward slashes, a leading `./` or `/` is stripped, repeated slashes collapse, and a trailing slash is removed. A pattern containing a slash is anchored to the root; one without is matched against the basename at any depth.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
